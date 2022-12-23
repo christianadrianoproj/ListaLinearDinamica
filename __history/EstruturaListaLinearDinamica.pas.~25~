@@ -1,0 +1,242 @@
+unit EstruturaListaLinearDinamica;
+
+interface
+
+uses System.Classes, System.SysUtils;
+
+type
+  PointAluno = ^TAluno;
+  TAluno = record
+    Matricula: Integer;
+    Nome: String[100];
+    Curso: String[200];
+    Semestre: Integer;
+    Mensalidade: Real;
+    Proximo: PointAluno;
+  end;
+
+  TEstruturaAlunos = class
+  private
+    primeiro: PointAluno;
+    ultimo: PointAluno;
+    Nodo: PointAluno;
+    { mostrar as informações do Aluno }
+    function carregarDados(aux: PointAluno): TStrings;
+  public
+    constructor Create();
+    destructor Destroy();
+
+    function IncluiAluno(PNome: String; PMatricula: Integer; PCurso: String; PSemestre: Integer; PMensalidade: Real): Boolean;
+    function RemoveAluno(Matricula: Integer): Boolean;
+    function RemoveTodosAlunos(): Boolean;
+    function carregarAlunos: TStrings;
+
+    function pesquisaNome(PNome:String): TStrings;
+    function pesquisaCurso(PCurso:String): TStrings;
+    function pesquisaCursoSemestre(PCurso:String; PSemestre: Integer): TStrings;
+    function getTotalMensalidadePorCurso(PCurso:String): Real;
+    function getAlunoComMaiorMensalidade(): TStrings;
+  end;
+
+implementation
+
+{ TEstruturaAlunos }
+
+function TEstruturaAlunos.carregarAlunos: TStrings;
+var
+   aux: PointAluno;
+begin
+  Result := TStringList.Create;
+  if (primeiro <> nil) then
+  begin
+    aux := primeiro;
+    while (aux <> nil) do
+    begin
+        Result.AddStrings(carregarDados(aux));
+        aux:= aux^.Proximo;
+    end;
+  end;
+end;
+
+function TEstruturaAlunos.carregarDados(aux: PointAluno): TStrings;
+begin
+   Result := TStringList.Create;
+   Result.Add('Matrícula: ' + IntToStr(aux^.matricula));
+   Result.Add('Aluno: ' + aux^.nome);
+   Result.Add('Curso: ' + aux^.curso + ' Semestre: ' + IntToStr(aux^.Semestre));
+   Result.Add('Valor: ' + FormatFloat('###,##0.00', aux^.Mensalidade));
+   Result.Add('------------------------------------------');
+end;
+
+constructor TEstruturaAlunos.Create;
+begin
+  primeiro := nil;
+  ultimo   := nil;
+  Nodo     := nil;
+end;
+
+destructor TEstruturaAlunos.Destroy;
+begin
+  RemoveTodosAlunos();
+end;
+
+function TEstruturaAlunos.getAlunoComMaiorMensalidade: TStrings;
+Var
+  aux, auxmaior : PointAluno;
+  valorMaior: Real;
+Begin
+  Result := TStringlist.Create;
+  Aux := primeiro;
+  auxmaior := aux;
+  valorMaior :=  aux^.Mensalidade;
+  while aux <> nil do
+  begin
+    if (aux^.Mensalidade > valorMaior) then
+    begin
+      valorMaior := aux^.Mensalidade;
+      auxmaior := aux;
+    end;
+    aux := aux^.Proximo;
+  end;
+  Result.Add('Aluno com maior valor de Mensalidades');
+  Result.AddStrings(carregarDados(auxmaior));
+end;
+
+function TEstruturaAlunos.GetTotalMensalidadePorCurso(PCurso: String): Real;
+Var
+  aux : PointAluno;
+Begin
+  Result := 0;
+  Aux := primeiro;
+  While aux <> nil do
+  begin
+    if (AnsiUpperCase(aux^.Curso) = AnsiUpperCase(PCurso)) then
+      Result := Result + aux^.Mensalidade;
+
+    aux := aux^.Proximo;
+  end;
+end;
+
+function TEstruturaAlunos.IncluiAluno(PNome: String; PMatricula: Integer;
+  PCurso: String; PSemestre: Integer; PMensalidade: Real): Boolean;
+begin
+  try
+    new(Nodo);
+    Nodo^.Matricula := PMatricula;
+    Nodo^.Nome := PNome;
+    Nodo^.Curso := PCurso;
+    Nodo^.Semestre := PSemestre;
+    Nodo^.Mensalidade := PMensalidade;
+    Nodo^.Proximo  := nil;
+
+    if primeiro = nil then
+    begin
+      primeiro := Nodo;
+    end
+    else
+      ultimo^.Proximo := Nodo;
+
+    ultimo := Nodo;
+    Result := true;
+  except
+    Result := false;
+  end;
+end;
+
+function TEstruturaAlunos.pesquisaCurso(PCurso: String): TStrings;
+Var
+  aux : PointAluno;
+Begin
+  Result := TStringlist.Create;
+  Aux := primeiro;
+  While aux <> nil do
+  begin
+    if AnsiUpperCase(aux^.Curso) = AnsiUpperCase(PCurso) then
+    begin
+      Result.AddStrings(carregarDados(aux));
+      break;
+    end
+    else
+      aux := aux^.Proximo;
+  end;
+end;
+
+function TEstruturaAlunos.pesquisaCursoSemestre(PCurso: String; PSemestre: Integer): TStrings;
+Var
+  aux : PointAluno;
+Begin
+  Result := TStringlist.Create;
+  Aux := primeiro;
+  While aux <> nil do
+  begin
+    if (AnsiUpperCase(aux^.Curso) = AnsiUpperCase(PCurso)) and (aux^.Semestre = PSemestre) then
+      Result.AddStrings(carregarDados(aux));
+
+    aux := aux^.Proximo;
+  end;
+end;
+
+function TEstruturaAlunos.pesquisaNome(PNome: String): TStrings;
+Var
+  aux : PointAluno;
+Begin
+  Result := TStringlist.Create;
+  Aux := primeiro;
+  While aux <> nil do
+  begin
+    if AnsiUpperCase(aux^.Nome) = AnsiUpperCase(PNome) then
+    begin
+      Result.AddStrings(carregarDados(aux));
+      break;
+    end
+    else
+      aux := aux^.Proximo;
+  end;
+end;
+
+function TEstruturaAlunos.RemoveAluno(Matricula: Integer): Boolean;
+var
+  aux, ant: PointAluno;
+begin
+  Result := False;
+  aux := primeiro;
+  while (aux <> nil) and (aux^.Matricula <> Matricula) do
+  Begin
+    ant := aux;
+    aux := aux^.Proximo;
+  end;
+  if Aux = nil then
+    exit;
+  if Aux = Primeiro then
+    Primeiro := Primeiro^.Proximo
+  else
+    if Aux = Ultimo then
+    begin
+      Ultimo := Ant;
+      Ultimo^.Proximo := nil;
+    end
+    else
+      Ant^.Proximo := Aux^.Proximo;
+  Result := True;
+  dispose(aux);
+end;
+
+function TEstruturaAlunos.RemoveTodosAlunos: Boolean;
+var
+  aux: PointAluno;
+Begin
+  Result := False;
+  try
+    while primeiro <> nil do
+    begin
+      aux := primeiro;
+      primeiro := primeiro^.Proximo;
+      dispose(aux);
+    end;
+    Result := True;
+  except
+    Result := False;
+  end;
+end;
+
+end.

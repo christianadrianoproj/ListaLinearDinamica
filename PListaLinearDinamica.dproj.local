@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/08/23 20:22:05.000.985,=J:\2 Semestre\ED\Fontes\ListaLinearDinamica\unit_CadastroAlunos.pas</Transaction>
+    <Transaction>2018/08/23 20:25:25.000.891,J:\2 Semestre\ED\Fontes\ListaLinearDinamica\UListaLinearDinamica.pas=</Transaction>
+    <Transaction>2018/08/26 19:16:42.000.871,=C:\Users\paulo\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/08/26 19:17:48.000.229,=C:\Users\paulo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2018/08/26 19:20:37.000.545,I:\2 Semestre\ED\Fontes\ListaLinearDinamica\UListaLinearDinamica.pas=C:\Users\paulo\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/08/26 19:20:37.000.545,I:\2 Semestre\ED\Fontes\ListaLinearDinamica\UListaLinearDinamica.dfm=C:\Users\paulo\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2018/08/26 19:20:53.000.026,I:\2 Semestre\ED\Fontes\ListaLinearDinamica\EstruturaListaLinearDinamica.pas=C:\Users\paulo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2018/08/26 19:21:02.000.000,I:\2 Semestre\ED\Fontes\ListaLinearDinamica\PListaLinearDinamica.dproj=C:\Users\paulo\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
